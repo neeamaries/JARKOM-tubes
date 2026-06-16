@@ -11,6 +11,18 @@ BASE_DIR = os.path.dirname(
     )
 )
 
+sender_name = input("Nama Sender: ")
+
+sender_ip = socket.gethostbyname(
+    socket.gethostname()
+)
+
+print("\n=== INFORMASI SENDER ===")
+print(f"Nama Sender : {sender_name}")
+print(f"IP Sender   : {sender_ip}")
+print(f"Multicast   : {MCAST_GRP}")
+print(f"Port        : {PORT}")
+
 sock = socket.socket(
     socket.AF_INET,
     socket.SOCK_DGRAM,
@@ -43,14 +55,15 @@ while True:
 
     pilihan = input("Pilih: ")
 
-    # =====================
     # TEXT
-    # =====================
     if pilihan in ["1", "2", "3"]:
 
         pesan = input("Masukkan pesan: ")
 
-        paket = f"TEXT|{pesan}".encode()
+        paket = (
+            f"TEXT|{sender_name}|"
+            f"{sender_ip}|{pesan}"
+        ).encode()
 
         sock.sendto(
             paket,
@@ -59,9 +72,7 @@ while True:
 
         print("Pesan multicast terkirim")
 
-    # =====================
     # FILE
-    # =====================
     elif pilihan in [
         "4", "5", "6",
         "7", "8", "9", "10"
@@ -86,7 +97,12 @@ while True:
         nama_file = os.path.basename(path_file)
 
         sock.sendto(
-            f"FILE_START|{nama_file}".encode(),
+            (
+                f"FILE_START|"
+                f"{sender_name}|"
+                f"{sender_ip}|"
+                f"{nama_file}"
+            ).encode(),
             (MCAST_GRP, PORT)
         )
 
@@ -115,9 +131,7 @@ while True:
             (MCAST_GRP, PORT)
         )
 
-        print(
-            f"{nama_file} berhasil dikirim"
-        )
+        print(f"{nama_file} berhasil dikirim")
 
     elif pilihan == "0":
         break
