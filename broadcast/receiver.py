@@ -71,9 +71,6 @@ while True:
     # SIMULASI TERIMA/TOLAK
     # =====================
 
-    if status_receiver == "tidak":
-        continue
-
     # =====================
     # TEXT
     # =====================
