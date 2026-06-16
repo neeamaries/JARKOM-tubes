@@ -18,6 +18,30 @@ os.makedirs(RECEIVED_DIR, exist_ok=True)
 
 nama_receiver = input("Nama Receiver: ")
 
+receiver_ip = socket.gethostbyname(
+    socket.gethostname()
+)
+
+print("\n=== INFORMASI RECEIVER ===")
+print(f"Nama Receiver : {nama_receiver}")
+print(f"IP Receiver   : {receiver_ip}")
+print(f"Port          : {PORT}")
+
+# =====================
+# KONFIRMASI RECEIVER
+# =====================
+
+while True:
+
+    status_receiver = input(
+        "\nTerima pesan broadcast? (Iya/Tidak): "
+    ).strip().lower()
+
+    if status_receiver in ["iya", "tidak"]:
+        break
+
+    print("Masukkan hanya: Iya atau Tidak")
+
 sock = socket.socket(
     socket.AF_INET,
     socket.SOCK_DGRAM
@@ -44,8 +68,16 @@ while True:
     data, addr = sock.recvfrom(65535)
 
     # =====================
+    # SIMULASI TERIMA/TOLAK
+    # =====================
+
+    if status_receiver == "tidak":
+        continue
+
+    # =====================
     # TEXT
     # =====================
+
     if data.startswith(b"TEXT|"):
 
         pesan = data.decode(errors="ignore")
@@ -57,14 +89,16 @@ while True:
         isi_pesan = parts[3]
 
         print("\n=== PESAN DITERIMA ===")
-        print(f"Receiver : {nama_receiver}")
-        print(f"Sender   : {sender}")
-        print(f"IP       : {sender_ip}")
-        print(f"Pesan    : {isi_pesan}")
+        print(f"Receiver     : {nama_receiver}")
+        print(f"IP Receiver  : {receiver_ip}")
+        print(f"Sender       : {sender}")
+        print(f"IP Sender    : {sender_ip}")
+        print(f"Pesan        : {isi_pesan}")
 
     # =====================
     # FILE START
     # =====================
+
     elif data.startswith(b"FILE_START|"):
 
         parts = data.decode(
@@ -88,24 +122,27 @@ while True:
         current_file = nama_file
 
         print("\n=== MENERIMA FILE ===")
-        print(f"Receiver : {nama_receiver}")
-        print(f"Sender   : {sender_file}")
-        print(f"IP       : {sender_ip_file}")
-        print(f"Nama File: {nama_file}")
+        print(f"Receiver     : {nama_receiver}")
+        print(f"IP Receiver  : {receiver_ip}")
+        print(f"Sender       : {sender_file}")
+        print(f"IP Sender    : {sender_ip_file}")
+        print(f"Nama File    : {nama_file}")
 
     # =====================
     # FILE END
     # =====================
+
     elif data == b"FILE_END":
 
         if file_handle:
             file_handle.close()
 
         print("\n=== FILE DITERIMA ===")
-        print(f"Receiver : {nama_receiver}")
-        print(f"Sender   : {sender_file}")
-        print(f"IP       : {sender_ip_file}")
-        print(f"Nama File: {current_file}")
+        print(f"Receiver     : {nama_receiver}")
+        print(f"IP Receiver  : {receiver_ip}")
+        print(f"Sender       : {sender_file}")
+        print(f"IP Sender    : {sender_ip_file}")
+        print(f"Nama File    : {current_file}")
 
         current_file = None
         sender_file = None
@@ -115,6 +152,7 @@ while True:
     # =====================
     # FILE CHUNK
     # =====================
+
     else:
 
         if file_handle:
