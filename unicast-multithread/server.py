@@ -2,13 +2,15 @@ import socket
 import threading
 import os
 
-HOST = "0.0.0.0"
+HOST = "192.168.1.3"
 PORT = 5001
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RECEIVED_DIR = os.path.join(BASE_DIR, "received_files")
 
 os.makedirs(RECEIVED_DIR, exist_ok=True)
+
+file_lock = threading.Lock()
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST, PORT))
@@ -65,6 +67,7 @@ def handle_client(conn, addr, client_id):
 
                 with open(path_simpan, "wb") as f:
 
+                    buffer = b""
                     total = 0
 
                     while total < ukuran:
@@ -78,6 +81,11 @@ def handle_client(conn, addr, client_id):
 
                         f.write(chunk)
                         total += len(chunk)
+                    
+                    with file_lock:
+                        with open(path_simpan, "wb") as f:
+                            f.write(buffer)
+                    print(f"\n[Client {client_id}] File '{nama_file}' tersimpan ({ukuran} bytes)")
 
                 print("\n=== FILE DITERIMA ===")
                 print(f"Client ID : {client_id}")
