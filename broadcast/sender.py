@@ -3,7 +3,7 @@ import os
 import time
 
 PORT = 5003
-BROADCAST_IP = "10.20.30.255"
+BROADCAST_IP = "10.217.3.255"
 
 BASE_DIR = os.path.dirname(
     os.path.dirname(
