@@ -4,7 +4,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 print("BASE_DIR =", BASE_DIR)
 
-HOST = "127.0.0.1"
+HOST = "192.168.1.3"
 PORT = 5000
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -76,8 +76,6 @@ while True:
         client.send(header.encode())
 
         client.sendall(data)
-
-        print(f"{nama_file} berhasil dikirim")
 
         print(f"{nama_file} berhasil dikirim")
 
