@@ -11,6 +11,7 @@ BASE_DIR = os.path.dirname(
     )
 )
 
+# DIREKTORI PENERIMA
 RECEIVED_DIR = os.path.join(
     BASE_DIR,
     "received_files"
@@ -42,6 +43,7 @@ sock.setsockopt(
     1
 )
 
+
 sock.bind(("", PORT))
 
 mreq = struct.pack(
@@ -50,10 +52,7 @@ mreq = struct.pack(
     socket.inet_aton(receiver_ip)
 )
 
-# =====================
 # KONFIRMASI JOIN GRUP
-# =====================
-
 while True:
 
     pilihan = input(
@@ -100,9 +99,7 @@ while True:
 
     data, addr = sock.recvfrom(65535)
 
-    # =====================
     # TEXT
-    # =====================
     if data.startswith(b"TEXT|"):
 
         pesan = data.decode(
@@ -122,9 +119,8 @@ while True:
         print(f"IP Sender    : {sender_ip}")
         print(f"Pesan        : {isi_pesan}")
 
-    # =====================
+
     # FILE START
-    # =====================
     elif data.startswith(b"FILE_START|"):
 
         parts = data.decode(
@@ -154,9 +150,7 @@ while True:
         print(f"IP Sender    : {sender_ip_file}")
         print(f"Nama File    : {nama_file}")
 
-    # =====================
     # FILE END
-    # =====================
     elif data == b"FILE_END":
 
         if file_handle:
@@ -174,9 +168,7 @@ while True:
         sender_ip_file = None
         file_handle = None
 
-    # =====================
     # FILE CHUNK
-    # =====================
     else:
 
         if file_handle:

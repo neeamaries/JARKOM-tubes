@@ -5,6 +5,7 @@ import time
 MCAST_GRP = "224.1.1.1"
 PORT = 5002
 
+# Letak direktori
 BASE_DIR = os.path.dirname(
     os.path.dirname(
         os.path.abspath(__file__)
@@ -23,8 +24,9 @@ print(f"IP Sender   : {sender_ip}")
 print(f"Multicast   : {MCAST_GRP}")
 print(f"Port        : {PORT}")
 
+# Alamat IPv4
 sock = socket.socket(
-    socket.AF_INET,
+    socket.AF_INET, 
     socket.SOCK_DGRAM,
     socket.IPPROTO_UDP
 )
@@ -36,14 +38,14 @@ sock.setsockopt(
     2
 )
 
-# PAKSA PAKAI WIFI INI
+# PAKSA PAKAI WIFI
 sock.setsockopt(
     socket.IPPROTO_IP,
     socket.IP_MULTICAST_IF,
     socket.inet_aton(sender_ip)
 )
 
-# LOOPBACK BIAR SENDER JUGA BISA NERIMA
+# LOOPBACK UNTUK SENDER
 sock.setsockopt(
     socket.IPPROTO_IP,
     socket.IP_MULTICAST_LOOP,
@@ -52,9 +54,9 @@ sock.setsockopt(
 
 while True:
 
-    print("\n========================================")
+    print(f"\n="*30)
     print("MULTICAST SENDER")
-    print("========================================")
+    print(f"="*30)
 
     print("1. Kirim 1-5 Kata")
     print("2. Kirim Kalimat Panjang")
@@ -70,6 +72,7 @@ while True:
 
     pilihan = input("Pilih: ")
 
+    # PENGIRIMAN TEKS
     if pilihan in ["1", "2", "3"]:
 
         pesan = input("Masukkan pesan: ")
@@ -86,25 +89,8 @@ while True:
 
         print("Pesan multicast terkirim")
 
-    if pilihan in ["1", "2", "3"]:
 
-        pesan = input("Masukkan pesan: ")
-
-        paket = (
-            f"TEXT|{sender_name}|"
-            f"{sender_ip}|{pesan}"
-        ).encode()
-
-        sock.sendto(
-            paket,
-            (MCAST_GRP, PORT)
-        )
-
-        print("Pesan multicast terkirim")
-
-    # =====================
-    # FILE
-    # =====================
+    # PENGIRIMAN FILE
     elif pilihan in [
         "4", "5", "6",
         "7", "8", "9", "10"
