@@ -86,5 +86,86 @@ while True:
 
         print("Pesan multicast terkirim")
 
+    if pilihan in ["1", "2", "3"]:
+
+        pesan = input("Masukkan pesan: ")
+
+        paket = (
+            f"TEXT|{sender_name}|"
+            f"{sender_ip}|{pesan}"
+        ).encode()
+
+        sock.sendto(
+            paket,
+            (MCAST_GRP, PORT)
+        )
+
+        print("Pesan multicast terkirim")
+
+    # =====================
+    # FILE
+    # =====================
+    elif pilihan in [
+        "4", "5", "6",
+        "7", "8", "9", "10"
+    ]:
+
+        file_map = {
+            "4": os.path.join(BASE_DIR, "testing", "testTXT.txt"),
+            "5": os.path.join(BASE_DIR, "testing", "testDocx.docx"),
+            "6": os.path.join(BASE_DIR, "testing", "testPDF.pdf"),
+            "7": os.path.join(BASE_DIR, "testing", "testJPG.jpg"),
+            "8": os.path.join(BASE_DIR, "testing", "testPNG.png"),
+            "9": os.path.join(BASE_DIR, "testing", "testMP3.mp3"),
+            "10": os.path.join(BASE_DIR, "testing", "testMP4.mp4")
+        }
+
+        path_file = file_map[pilihan]
+
+        if not os.path.exists(path_file):
+            print("File tidak ditemukan")
+            continue
+
+        nama_file = os.path.basename(path_file)
+        ukuran_file = os.path.getsize(path_file)
+
+        sock.sendto(
+            (
+                f"FILE_START|"
+                f"{sender_name}|"
+                f"{sender_ip}|"
+                f"{nama_file}|"
+                f"{ukuran_file}"
+            ).encode(),
+            (MCAST_GRP, PORT)
+        )
+
+        time.sleep(0.3)
+
+        with open(path_file, "rb") as f:
+
+            while True:
+
+                chunk = f.read(4096)
+
+                if not chunk:
+                    break
+
+                sock.sendto(
+                    chunk,
+                    (MCAST_GRP, PORT)
+                )
+
+                time.sleep(0.001)
+
+        time.sleep(0.3)
+
+        sock.sendto(
+            b"FILE_END",
+            (MCAST_GRP, PORT)
+        )
+
+        print(f"{nama_file} berhasil dikirim")
+
     elif pilihan == "0":
         break
