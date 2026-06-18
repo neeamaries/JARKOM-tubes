@@ -3,7 +3,7 @@ import os
 import time
 
 PORT = 5003
-BROADCAST_IP = "10.155.38.255"
+BROADCAST_IP = "10.218.8.255"
 
 BASE_DIR = os.path.dirname(
     os.path.dirname(
@@ -50,9 +50,6 @@ while True:
 
     pilihan = input("Pilih: ")
 
-    # =====================
-    # TEXT
-    # =====================
     if pilihan in ["1", "2", "3"]:
 
         pesan = input("Masukkan pesan: ")
@@ -69,9 +66,6 @@ while True:
 
         print("Pesan broadcast terkirim")
 
-    # =====================
-    # FILE
-    # =====================
     elif pilihan in [
         "4", "5", "6",
         "7", "8", "9", "10"
@@ -95,6 +89,7 @@ while True:
 
         nama_file = os.path.basename(path_file)
 
+        # File Start
         sock.sendto(
             (
                 f"FILE_START|{sender_name}|"
@@ -103,13 +98,13 @@ while True:
             (BROADCAST_IP, PORT)
         )
 
-        time.sleep(0.2)
+        time.sleep(0.2) # File Kosong
 
-        with open(path_file, "rb") as f:
+        with open(path_file, "rb") as f: # Read Binary
 
             while True:
 
-                chunk = f.read(4096)
+                chunk = f.read(4096) 
 
                 if not chunk:
                     break
@@ -119,10 +114,11 @@ while True:
                     (BROADCAST_IP, PORT)
                 )
 
-                time.sleep(0.001)
+                time.sleep(0.001) 
 
         time.sleep(0.2)
 
+        # File End
         sock.sendto(
             b"FILE_END",
             (BROADCAST_IP, PORT)
