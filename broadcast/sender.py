@@ -114,7 +114,7 @@ while True:
                     (BROADCAST_IP, PORT)
                 )
 
-                time.sleep(0.001) 
+                time.sleep(0.005) 
 
         time.sleep(0.2)
 

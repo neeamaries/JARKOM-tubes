@@ -150,7 +150,7 @@ while True:
                     (MCAST_GRP, PORT)
                 )
 
-                time.sleep(0.001)
+                time.sleep(0.005)
 
         time.sleep(0.3)
 
