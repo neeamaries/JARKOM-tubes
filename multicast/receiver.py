@@ -21,9 +21,17 @@ os.makedirs(RECEIVED_DIR, exist_ok=True)
 
 nama_receiver = input("Nama Receiver: ")
 
-receiver_ip = socket.gethostbyname(
-    socket.gethostname()
+# Ambil IP WiFi aktif
+temp = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_DGRAM
 )
+
+temp.connect(("8.8.8.8", 80))
+
+receiver_ip = temp.getsockname()[0]
+
+temp.close()
 
 print("\n=== INFORMASI RECEIVER ===")
 print(f"Nama Receiver : {nama_receiver}")

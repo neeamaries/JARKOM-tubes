@@ -14,9 +14,17 @@ BASE_DIR = os.path.dirname(
 
 sender_name = input("Nama Sender: ")
 
-sender_ip = socket.gethostbyname(
-    socket.gethostname()
+# Ambil IP WiFi aktif
+temp = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_DGRAM
 )
+
+temp.connect(("8.8.8.8", 80))
+
+sender_ip = temp.getsockname()[0]
+
+temp.close()
 
 print("\n=== INFORMASI SENDER ===")
 print(f"Nama Sender : {sender_name}")
@@ -53,8 +61,8 @@ sock.setsockopt(
 )
 
 while True:
-
-    print(f"\n="*30)
+    print("\n")
+    print(f"="*30)
     print("MULTICAST SENDER")
     print(f"="*30)
 
